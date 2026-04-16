@@ -14,4 +14,11 @@
 //
 // Call [Load] to read a file from disk, or [Defaults] to obtain a
 // configuration with sensible default values.
+//
+// # Validation
+//
+// After loading, configuration values are validated automatically.
+// Validation errors are returned as a [ValidationError] which lists
+// all offending fields, allowing callers to surface actionable
+// messages to users without requiring multiple load attempts.
 package config
