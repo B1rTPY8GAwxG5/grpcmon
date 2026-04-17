@@ -12,4 +12,7 @@
 //
 // The package is intentionally stateless — call Compute with whatever
 // snapshot of entries you need and discard the result when done.
+//
+// A Summary with no entries will have zero counts and zero latencies;
+// callers should check Total before interpreting latency fields.
 package stats
