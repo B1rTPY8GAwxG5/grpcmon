@@ -52,6 +52,18 @@ func (m Model) Init() tea.Cmd { return nil }
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		// When viewing entry detail, handle navigation keys separately.
+		if m.selected != nil {
+			switch msg.String() {
+			case "backspace", "esc":
+				m.selected = nil
+				return m, nil
+			case "q", "ctrl+c":
+				m.quitting = true
+				return m, tea.Quit
+			}
+			return m, nil
+		}
 		switch msg.String() {
 		case "q", "ctrl+c":
 			m.quitting = true
