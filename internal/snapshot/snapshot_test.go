@@ -66,6 +66,19 @@ func TestLoad_MissingFile(t *testing.T) {
 	}
 }
 
+func TestSave_DuplicateName(t *testing.T) {
+	dir := t.TempDir()
+	store := makeStore(t, 2)
+
+	if _, err := snapshot.Save(dir, "dup", store); err != nil {
+		t.Fatalf("first Save: %v", err)
+	}
+	_, err := snapshot.Save(dir, "dup", store)
+	if err == nil {
+		t.Error("expected error when saving duplicate snapshot name, got nil")
+	}
+}
+
 func TestList_ReturnsNames(t *testing.T) {
 	dir := t.TempDir()
 	store := makeStore(t, 1)
