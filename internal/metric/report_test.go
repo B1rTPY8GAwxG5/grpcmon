@@ -62,3 +62,24 @@ func TestSummarise_Empty(t *testing.T) {
 		t.Errorf("expected empty, got %d", len(sums))
 	}
 }
+
+func TestSummarise_MultipleMethods(t *testing.T) {
+	tr := New(time.Minute)
+	now := time.Now()
+	tr.Record(makeEntry("/svc/A", 0, 10, now))
+	tr.Record(makeEntry("/svc/B", 0, 20, now))
+	tr.Record(makeEntry("/svc/B", 1, 30, now))
+
+	sums := tr.Summarise()
+	if len(sums) != 2 {
+		t.Fatalf("expected 2 summaries, got %d", len(sums))
+	}
+
+	// Summaries are sorted alphabetically, so /svc/A comes first.
+	if sums[0].Method != "/svc/A" || sums[0].Total != 1 {
+		t.Errorf("/svc/A: want total=1, got method=%s total=%d", sums[0].Method, sums[0].Total)
+	}
+	if sums[1].Method != "/svc/B" || sums[1].Total != 2 {
+		t.Errorf("/svc/B: want total=2, got method=%s total=%d", sums[1].Method, sums[1].Total)
+	}
+}
