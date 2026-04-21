@@ -33,6 +33,28 @@ func TestForStatus_ColourError(t *testing.T) {
 	}
 }
 
+// TestForStatus_NoColour_AllCodes verifies that ForStatus with colour=false
+// returns the plain string representation of the status code for a selection
+// of common codes.
+func TestForStatus_NoColour_AllCodes(t *testing.T) {
+	cases := []struct {
+		code codes.Code
+		want string
+	}{
+		{codes.OK, "OK"},
+		{codes.Canceled, "Canceled"},
+		{codes.NotFound, "NotFound"},
+		{codes.Internal, "Internal"},
+		{codes.Unavailable, "Unavailable"},
+	}
+	for _, c := range cases {
+		got := label.ForStatus(c.code, false)
+		if got != c.want {
+			t.Errorf("ForStatus(%v, false) = %q, want %q", c.code, got, c.want)
+		}
+	}
+}
+
 func TestLatencyBand(t *testing.T) {
 	cases := []struct {
 		ms   float64
