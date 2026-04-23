@@ -14,7 +14,10 @@ func Save(s *Store, path string) error {
 		return fmt.Errorf("annotate: save: %w", err)
 	}
 	defer f.Close()
-	return encode(f, s.List())
+	if err := encode(f, s.List()); err != nil {
+		return err
+	}
+	return f.Close()
 }
 
 // LoadInto reads annotations from the file at path and adds them to s.
