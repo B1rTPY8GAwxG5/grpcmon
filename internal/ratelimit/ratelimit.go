@@ -12,6 +12,7 @@ type Limiter struct {
 	ticker *time.Ticker
 	tokens chan struct{}
 	stop   chan struct{}
+	rps    int
 }
 
 // New creates a Limiter that allows up to rps operations per second.
@@ -25,6 +26,7 @@ func New(rps int) *Limiter {
 		ticker: time.NewTicker(interval),
 		tokens: make(chan struct{}, rps),
 		stop:   make(chan struct{}),
+		rps:    rps,
 	}
 	go l.fill()
 	return l
@@ -52,6 +54,12 @@ func (l *Limiter) Wait(ctx context.Context) error {
 	case <-ctx.Done():
 		return ctx.Err()
 	}
+}
+
+// RPS returns the rate limit in operations per second that the Limiter
+// was configured with.
+func (l *Limiter) RPS() int {
+	return l.rps
 }
 
 // Stop releases resources held by the Limiter.
